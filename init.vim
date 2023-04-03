@@ -27,7 +27,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
-colorscheme nightfly
+colorscheme base16-gruvbox-dark-hard
 let NERDTreeShowLineNumbers=1
 autocmd FileType nerdtree setlocal relativenumber
 
@@ -43,6 +43,7 @@ nmap <A-k> <C-w>k
 nmap <A-j> <C-w>j
 nmap <A-h> <C-w>h
 nnoremap <silent> <C-f> :Files<CR>
+tnoremap <C-d> <C-\><C-n>
 
 " ========== keybinds end ===========
 
@@ -101,3 +102,4 @@ let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
 let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
 let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
 let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
+

@@ -6,6 +6,7 @@ return require('packer').startup(function(use)
 	use 'preservim/nerdtree'
 	use 'vim-airline/vim-airline'
 	use 'vim-airline/vim-airline-themes'
+    use 'neovim/nvim-lspconfig'
     use {
       'nvim-telescope/telescope.nvim', branch = '0.1.x',
       requires = { {'nvim-lua/plenary.nvim'} }

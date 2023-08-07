@@ -11,12 +11,19 @@ vim.cmd('filetype plugin indent on')
 vim.cmd('colorscheme base16-gruvbox-dark-hard')
 vim.o.termguicolors = true
 
--- NERDTree
-vim.g.NERDTreeShowLineNumbers = true
-
 require('lsp')
 require('airline')
 require('treesitter')
 require('cmp_config')
+
+-- mason
+require('mason').setup()
+require('mason-lspconfig').setup()
+require('fidget').setup()
+require('nvim-tree').setup {
+    view = {
+        relativenumber = true
+    }
+}
 
 vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]]

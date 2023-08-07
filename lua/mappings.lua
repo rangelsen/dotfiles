@@ -22,7 +22,7 @@ function tmap(shortcut, command)
   map('t', shortcut, command)
 end
 
-nmap('<C-n>', ':NERDTree<Cr>')
+nmap('<C-n>', ':NvimTreeToggle<Cr>')
 nmap('<C-t>', ':terminal<Cr>')
 nmap('<C-l>', '3<C-w>>')
 nmap('<C-h>', '3<C-w><')

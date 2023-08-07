@@ -9,4 +9,6 @@ lspconfig.gopls.setup {
         formattingProvider = "gofmt"
     }
 }
-
+lspconfig.elixirls.setup {
+    cmd = { "elixir-ls" },
+}

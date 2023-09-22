@@ -40,6 +40,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.opt.relativenumber = true
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -132,10 +133,6 @@ require('lazy').setup({
   {
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
   },
 
   {
@@ -145,7 +142,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'tokyonight',
         component_separators = '|',
         section_separators = '',
       },
@@ -199,9 +196,37 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons",
     },
     config = function()
-      require("nvim-tree").setup {}
+      require("nvim-tree").setup {
+        view = {
+          relativenumber = true
+        }
+      }
     end,
-  }
+  },
+  
+  {
+    'mfussenegger/nvim-dap',
+    version = "*",
+  },
+  {
+    'rcarriga/nvim-dap-ui',
+    version = "*",
+  },
+  {
+    'theHamsta/nvim-dap-virtual-text',
+    version = "*",
+  },
+  {
+    'nvim-telescope/telescope-dap.nvim',
+    version = "*",
+  },
+  {
+    'folke/tokyonight.nvim',
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'tokyonight-moon'
+    end,
+  },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -318,7 +343,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'c_sharp', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'c_sharp', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'haskell', 'rust' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -562,6 +587,64 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+
+-- DAP
+local dap, dapui = require('dap'), require('dapui')
+dapui.setup()
+
+dap.listeners.after.event_initialized["dapui_config"] = function()
+    dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+    dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+    dapui.close()
+end
+vim.keymap.set('n', '<F5>',
+    function() require('dap').continue() end)
+vim.keymap.set('n', '<F10>',
+    function() require('dap').step_over() end)
+vim.keymap.set('n', '<F11>',
+    function() require('dap').step_into() end)
+vim.keymap.set('n', '<F12>',
+    function() require('dap').step_out() end)
+vim.keymap.set('n', '<Leader>b',
+    function() require('dap').toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B',
+    function() require('dap').set_breakpoint() end)
+vim.keymap.set('n', '<Leader>lp',
+    function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set('n', '<Leader>dr',
+    function() require('dap').repl.open() end)
+vim.keymap.set('n', '<Leader>dl',
+    function() require('dap').run_last() end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>dh',
+    function() require('dap.ui.widgets').hover() end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>dp',
+    function() require('dap.ui.widgets').preview() end)
+vim.keymap.set('n', '<Leader>df',
+    function()
+        local widgets = require('dap.ui.widgets')
+        widgets.centered_float(widgets.frames)
+    end)
+vim.keymap.set('n', '<Leader>ds',
+    function()
+        local widgets = require('dap.ui.widgets')
+        widgets.centered_float(widgets.scopes)
+    end)
+
+dap.adapters.cppdbg = {
+  id = 'cppdbg',
+  type = 'executable',
+  command = '/home/roy/.local/share/nvim/mason/bin/OpenDebugAD7',
+}
+
+dap.configurations.rust = dap.configurations.cpp
+
+local code = require('dap.ext.vscode')
+code.load_launchjs(nil, { cppdbg = { 'cpp', 'rust' } })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

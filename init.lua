@@ -40,6 +40,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.o.relativenumber = true
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -84,7 +85,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -108,7 +109,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',          opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -122,7 +123,8 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
@@ -133,9 +135,6 @@ require('lazy').setup({
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
     priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
   },
 
   {
@@ -145,7 +144,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'tokyonight',
         component_separators = '|',
         section_separators = '',
       },
@@ -164,7 +163,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -199,8 +198,47 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons",
     },
     config = function()
-      require("nvim-tree").setup {}
+      require("nvim-tree").setup {
+        view = {
+          relativenumber = true
+        }
+      }
     end,
+  },
+
+  {
+    'mfussenegger/nvim-dap',
+    version = "*",
+  },
+
+  {
+    'rcarriga/nvim-dap-ui',
+    version = "*",
+  },
+
+  {
+    'theHamsta/nvim-dap-virtual-text',
+    version = "*",
+  },
+
+  {
+    'nvim-telescope/telescope-dap.nvim',
+    version = "*",
+  },
+  {
+    'folke/tokyonight.nvim',
+    version = "*",
+    config = function()
+      vim.cmd.colorscheme 'tokyonight-moon'
+    end,
+  },
+  {
+    'akinsho/git-conflict.nvim',
+    version = "*",
+    config = true
+  },
+  {
+    'github/copilot.vim',
   }
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -318,7 +356,8 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'c_sharp', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'c_sharp', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim',
+    'haskell', 'json' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -488,6 +527,79 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+
+  gopls = {
+    gopls = {
+      analyses = {
+        appends              = true,
+        asmdecl              = true,
+        assign               = true,
+        atomic               = true,
+        atomicalign          = true,
+        bools                = true,
+        cgocall              = true,
+        composites           = true,
+        copylocks            = true,
+        deepequalerrors      = true,
+        defers               = true,
+        deprecated           = true,
+        directive            = true,
+        embed                = true,
+        errorsas             = true,
+        fieldalignment       = true,
+        httpresponse         = true,
+        ifaceassert          = true,
+        loopclosure          = true,
+        lostcancel           = true,
+        nilfunc              = true,
+        nilness              = true,
+        printf               = true,
+        shadow               = true,
+        shift                = true,
+        simplifycompositelit = true,
+        simplifyrange        = true,
+        simplifyslice        = true,
+        slog                 = true,
+        sortslice            = true,
+        stdmethods           = true,
+        stringintconv        = true,
+        structtag            = true,
+        testinggoroutine     = true,
+        tests                = true,
+        timeformat           = true,
+        unmarshal            = true,
+        unreachable          = true,
+        unsafeptr            = true,
+        unusedparams         = true,
+        unusedresult         = true,
+        unusedwrite          = true,
+        useany               = true,
+        fillreturns          = true,
+        nonewvars            = true,
+        noresultvalues       = true,
+        undeclaredname       = true,
+        unusedvariable       = true,
+        fillstruct           = true,
+        infertypeargs        = true,
+        stubmethods          = true,
+      },
+      staticcheck = true,
+      gofumpt = true,
+      codelenses = { test = true },
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      } or nil,
+    },
+    flags = {
+        debounce_text_changes = 200,
+    },
+  },
 }
 
 -- Setup neovim lua configuration
@@ -562,6 +674,89 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+-- DAP
+local dap, dapui = require('dap'), require('dapui')
+dapui.setup()
+
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+
+vim.keymap.set('n', '<F5>',
+  function() dap.continue() end)
+vim.keymap.set('n', '<F17>', -- F17 = <S-F5>
+
+  function()
+    dap.terminate()
+    dapui.close()
+  end)
+vim.keymap.set('n', '<F10>',
+  function() dap.step_over() end)
+vim.keymap.set('n', '<F11>',
+  function() dap.step_into() end)
+vim.keymap.set('n', '<F12>',
+  function() dap.step_out() end)
+vim.keymap.set('n', '<Leader>b',
+  function() dap.toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B',
+  function() dap.set_breakpoint() end)
+vim.keymap.set('n', '<Leader>lp',
+  function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set('n', '<Leader>dr',
+  function() dap.repl.open() end)
+vim.keymap.set('n', '<Leader>dl',
+  function() dap.run_last() end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>dh',
+  function() require('dap.ui.widgets').hover() end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>dp',
+  function() require('dap.ui.widgets').preview() end)
+vim.keymap.set('n', '<Leader>df',
+  function()
+    local widgets = require('dap.ui.widgets')
+    widgets.centered_float(widgets.frames)
+  end)
+vim.keymap.set('n', '<Leader>ds',
+  function()
+    local widgets = require('dap.ui.widgets')
+    widgets.centered_float(widgets.scopes)
+  end)
+
+-- Some differences between Linux and Windows
+dap.adapters.cppdbg = {
+  id = 'cppdbg',
+  type = 'executable',
+  command = '/home/roy/.local/share/nvim/mason/bin/OpenDebugAD7',
+}
+
+dap.adapters.coreclr = {
+  type = 'executable',
+  command = '/home/roy/.netcoredbg/netcoredbg',
+  args = { '--interpreter=vscode' }
+}
+
+local vscodeconfig = {
+  cppdbg = { 'c', 'cpp', 'rust' },
+  coreclr = { 'cs' }
+}
+
+require('dap.ext.vscode').load_launchjs(nil, vscodeconfig)
+
+dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp
+
+-- vim.keymap.set("n", "<Leader>ha", mark.add_file( { desc = "Add file to Harpoon file list" } ))
+-- vim.keymap.set("n", "<Leader>hl", ui.toggle_quick_menu( { desc = "Show Harpoon file list" } ))
+
+--vim.keymap.set("n", "<Leader>h1", function() ui.nav_file(1) end, { desc = "Select file number 1 in Harpoon file list" })
+--`vim.keymap.set("n", "<Leader>h2", function() ui.nav_file(2) end, { desc = "Select file number 2 in Harpoon file list" })
+--vim.keymap.set("n", "<Leader>h3", function() ui.nav_file(3) end, { desc = "Select file number 3 in Harpoon file list" })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

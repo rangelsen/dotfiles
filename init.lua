@@ -254,7 +254,8 @@ require('lazy').setup({
   },
   {
     'github/copilot.vim',
-  }
+  },
+  'leoluz/nvim-dap-go'
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -758,7 +759,7 @@ dap.adapters.coreclr = {
 
 local vscodeconfig = {
   cppdbg = { 'c', 'cpp', 'rust' },
-  coreclr = { 'cs' }
+  coreclr = { 'cs' },
 }
 
 require('dap.ext.vscode').load_launchjs(nil, vscodeconfig)
@@ -766,6 +767,43 @@ require('dap.ext.vscode').load_launchjs(nil, vscodeconfig)
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 
+require('dap-go').setup {
+  -- Additional dap configurations can be added.
+  -- dap_configurations accepts a list of tables where each entry
+  -- represents a dap configuration. For more details do:
+  -- :help dap-configuration
+  dap_configurations = {
+    {
+      -- Must be "go" or it will be ignored by the plugin
+      type = "go",
+      name = "Attach remote",
+      mode = "remote",
+      request = "attach",
+    },
+  },
+  -- delve configurations
+  delve = {
+    -- the path to the executable dlv which will be used for debugging.
+    -- by default, this is the "dlv" executable on your PATH.
+    path = "dlv",
+    -- time to wait for delve to initialize the debug session.
+    -- default to 20 seconds
+    initialize_timeout_sec = 20,
+    -- a string that defines the port to start delve debugger.
+    -- default to string "${port}" which instructs nvim-dap
+    -- to start the process in a random available port
+    port = "${port}",
+    -- additional args to pass to dlv
+    args = {},
+    -- the build flags that are passed to delve.
+    -- defaults to empty string, but can be used to provide flags
+    -- such as "-tags=unit" to make sure the test suite is
+    -- compiled during debugging, for example.
+    -- passing build flags using args is ineffective, as those are
+    -- ignored by delve in dap mode.
+    build_flags = "",
+  },
+}
 -- vim.keymap.set("n", "<Leader>ha", mark.add_file( { desc = "Add file to Harpoon file list" } ))
 -- vim.keymap.set("n", "<Leader>hl", ui.toggle_quick_menu( { desc = "Show Harpoon file list" } ))
 
